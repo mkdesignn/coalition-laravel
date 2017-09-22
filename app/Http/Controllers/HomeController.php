@@ -48,13 +48,15 @@ class HomeController extends Controller
 
     private function generateXmlFile($request){
 
-        $file_content = [];
+        $file_content = '<root/>';
         if( file_exists(storage_path()."/app/public/order.xml") ){
-            $file_content = (array) json_decode(File::get(storage_path()."/app/public/order.xml"));
+            $file_content = File::get(storage_path()."/app/public/order.xml");
+            if( $file_content == '' )
+                $file_content = '<root/>';
         }
 
 
-        $xml = new SimpleXMLElement('<root/>');
+        $xml = new SimpleXMLElement($file_content);
         $track = $xml->addChild('product');
         foreach( $request as $key => $req ){
             $track->addChild($key, $req);
